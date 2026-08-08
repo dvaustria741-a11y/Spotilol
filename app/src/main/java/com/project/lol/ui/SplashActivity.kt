@@ -69,13 +69,15 @@ class SplashActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val analytics = FirebaseAnalytics.getInstance(this)
-        FirebaseCrashlytics.getInstance()
-        FirebasePerformance.getInstance()
-        analytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, Bundle().apply {
-            putString(FirebaseAnalytics.Param.SCREEN_NAME, "Spotilol")
-            putString(FirebaseAnalytics.Param.SCREEN_CLASS, "SplashActivity")
-        })
+        runCatching {
+            val analytics = FirebaseAnalytics.getInstance(this)
+            FirebaseCrashlytics.getInstance()
+            FirebasePerformance.getInstance()
+            analytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, Bundle().apply {
+                putString(FirebaseAnalytics.Param.SCREEN_NAME, "Spotilol")
+                putString(FirebaseAnalytics.Param.SCREEN_CLASS, "SplashActivity")
+            })
+        }
 
         setContent {
             var certInstalled by remember { mutableStateOf(false) }
@@ -371,3 +373,4 @@ private fun Step(number: Int, text: String) {
         )
     }
 }
+
