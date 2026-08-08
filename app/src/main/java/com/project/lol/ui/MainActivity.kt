@@ -149,7 +149,9 @@ class MainActivity : ComponentActivity() {
         60 to "60 min"
     )
 
-    private val analytics: FirebaseAnalytics by lazy { FirebaseAnalytics.getInstance(this) }
+    private val analytics: FirebaseAnalytics? by lazy {
+        runCatching { FirebaseAnalytics.getInstance(this) }.getOrNull()
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -157,7 +159,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Track screen view
-        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, Bundle().apply {
+        analytics?.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, Bundle().apply {
             putString(FirebaseAnalytics.Param.SCREEN_NAME, "MainActivity")
             putString(FirebaseAnalytics.Param.SCREEN_CLASS, "MainActivity")
         })
@@ -213,7 +215,7 @@ class MainActivity : ComponentActivity() {
                             },
                             actions = {
                                 IconButton(onClick = {
-                                    analytics.logEvent("open_settings", Bundle().apply {
+                                    analytics?.logEvent("open_settings", Bundle().apply {
                                         putString(FirebaseAnalytics.Param.SCREEN_NAME, "SettingsActivity")
                                     })
                                     startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
@@ -233,14 +235,14 @@ class MainActivity : ComponentActivity() {
                                             .putBoolean("ServiceOn", newValue)
                                             .apply()
                                         if (!newValue) {
-                                            analytics.logEvent("service_toggle", Bundle().apply {
+                                            analytics?.logEvent("service_toggle", Bundle().apply {
                                                 putString("enabled", "off")
                                             })
                                             stopService(Intent(this@MainActivity, MediaNotificationService::class.java))
                                             serviceStarted = false
                                             destroyWebView()
                                         } else {
-                                            analytics.logEvent("service_toggle", Bundle().apply {
+                                            analytics?.logEvent("service_toggle", Bundle().apply {
                                                 putString("enabled", "on")
                                             })
                                         }
@@ -441,7 +443,7 @@ class MainActivity : ComponentActivity() {
         sleepTimerActive.value = true
         sleepTimerRemainingMs.longValue = totalMs
 
-        analytics.logEvent("sleep_timer_start", Bundle().apply {
+        analytics?.logEvent("sleep_timer_start", Bundle().apply {
             putString("minutes", minutes.toString())
         })
 
@@ -845,7 +847,7 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
 
-        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, Bundle().apply {
+        analytics?.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, Bundle().apply {
             putString(FirebaseAnalytics.Param.SCREEN_NAME, "MainActivity")
             putString(FirebaseAnalytics.Param.SCREEN_CLASS, "MainActivity")
         })
@@ -904,3 +906,4 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
     }
 }
+
