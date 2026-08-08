@@ -40,6 +40,7 @@ object SpotilolPlayer {
                     +'<button class="spl-btn spl-btn-sm" id="spl-repeat" aria-label="Repeat"><svg viewBox="0 0 16 16" width="14" height="14"><path fill="currentColor" d="M0 4.75A3.75 3.75 0 0 1 3.75 1h8.5A3.75 3.75 0 0 1 16 4.75v5a3.75 3.75 0 0 1-3.75 3.75H9.81l1.018 1.018a.75.75 0 1 1-1.06 1.06L6.939 12.75l2.829-2.828a.75.75 0 1 1 1.06 1.06L9.811 12h2.439a2.25 2.25 0 0 0 2.25-2.25v-5a2.25 2.25 0 0 0-2.25-2.25h-8.5A2.25 2.25 0 0 0 1.5 4.75v5A2.25 2.25 0 0 0 3.75 12H5v1.5H3.75A3.75 3.75 0 0 1 0 9.75z"/></svg></button>'
                     +'</div>';
 
+                pl.style.display='none';
                 document.body.appendChild(pl);
 
                 document.getElementById('spl-prev').onclick=function(){actSkipBack()};
@@ -80,6 +81,15 @@ object SpotilolPlayer {
                 document.addEventListener('touchmove',function(e){if(dragging)seekTo(e.touches[0])},{passive:true});
                 document.addEventListener('mouseup',function(){dragging=false});
                 document.addEventListener('touchend',function(){dragging=false});                    window.splUpdate=function(){
+                        var trackEl=document.querySelector('a[data-testid=context-item-link]');
+                        var hasTrack=trackEl&&trackEl.textContent&&trackEl.textContent.trim().length>0;
+                        if(!hasTrack){
+                            if(pl.style.display!=='none') pl.style.display='none';
+                            return;
+                        } else if(pl.style.display==='none'){
+                            pl.style.display='flex';
+                        }
+
                         var ci=document.getElementById('spl-cover-img');
                         var tk=document.getElementById('spl-track');
                         var ar=document.getElementById('spl-artist');
@@ -98,8 +108,7 @@ object SpotilolPlayer {
                         var imgEl=npb?npb.querySelector('img[data-testid="cover-art-image"]'):null;
                         if(ci&&imgEl&&imgEl.src&&ci.src!==imgEl.src) ci.src=imgEl.src;
 
-                        var trackEl=document.querySelector('a[data-testid=context-item-link]');
-                        if(tk&&trackEl&&trackEl.textContent&&tk.textContent!==trackEl.textContent) tk.textContent=trackEl.textContent;
+                        if(tk&&trackEl.textContent&&tk.textContent!==trackEl.textContent) tk.textContent=trackEl.textContent;
 
                         var artistEl=document.querySelector('a[data-testid=context-item-info-artist]');
                         if(!artistEl) artistEl=document.querySelector('a[data-testid=context-item-info-show]');
@@ -171,3 +180,4 @@ object SpotilolPlayer {
         
     """
 }
+
