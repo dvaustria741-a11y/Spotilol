@@ -51,9 +51,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.perf.FirebasePerformance
 import com.project.lol.proxy.LocalProxyManager
 import com.project.lol.ui.theme.SpotifyTheme
 import kotlinx.coroutines.Dispatchers
@@ -68,16 +65,6 @@ class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-
-        runCatching {
-            val analytics = FirebaseAnalytics.getInstance(this)
-            FirebaseCrashlytics.getInstance()
-            FirebasePerformance.getInstance()
-            analytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, Bundle().apply {
-                putString(FirebaseAnalytics.Param.SCREEN_NAME, "Spotilol")
-                putString(FirebaseAnalytics.Param.SCREEN_CLASS, "SplashActivity")
-            })
-        }
 
         setContent {
             var certInstalled by remember { mutableStateOf(false) }
@@ -373,4 +360,5 @@ private fun Step(number: Int, text: String) {
         )
     }
 }
+
 
